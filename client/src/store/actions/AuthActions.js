@@ -8,7 +8,7 @@ import {
     signUpMongo
 } from '../../services/AuthService';
 import axios from 'axios';
-
+import { axiosPrivate } from '../../api/axios';
 
 export const SIGNUP_CONFIRMED_ACTION = '[signup action] confirmed signup';
 export const SIGNUP_FAILED_ACTION = '[signup action] failed signup';
@@ -21,6 +21,7 @@ export function signupAction(name, email, phone, parentId, roles, password, navi
     return (dispatch) => {
         signUpMongo(name, email, phone, parentId, roles, password)
             .then((response) => {
+                // console.log(!response.data.message) 
                 if(response.data.message=="Request is Unathorized"){
                     alert('unAthorized')
                     return console.log(response.data.message, 'form mongoresponse')
@@ -55,7 +56,7 @@ export function signupAction(name, email, phone, parentId, roles, password, navi
             //         // navigate('/dashboard');
             //     })
             .catch((error) => {
-                const errorMessage = formatError(error.response);
+                const errorMessage = formatError(error.response.data);
                 dispatch(signupFailedAction(errorMessage));
             });
     };
@@ -74,9 +75,15 @@ export function loginAction(email, password, navigate) {
     return (dispatch) => {
         login(email, password)
             .then((response) => {
-                console.log(response.data, 'response data from login')
-                // setHeader("Authorization", `Bearer ${response.data.accessToken}`)
                 const accessTokenSaved = saveTokenInCookie(response.data);
+                // const requestIntercept = axiosPrivate.interceptors.request.use(
+                //     config => {
+                //         if (!config.headers['Authorization']) {
+                //             config.headers['Authorization'] = `Bearer ${response?.data?.accessToken}`;
+                //         }
+                //         return config;
+                //     }, (error) => Promise.reject(error)
+                // );
                 if (response) {
                     navigate('/dashboard');
                 }
@@ -88,7 +95,7 @@ export function loginAction(email, password, navigate) {
                 dispatch(loginConfirmedAction(response.data));
             })
             .catch((error) => {
-                console.log("error");
+                //console.log(error);
                 const errorMessage = formatError(error.response.data);
                 dispatch(loginFailedAction(errorMessage));
             });

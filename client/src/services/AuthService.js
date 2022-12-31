@@ -22,7 +22,6 @@ export function signUp(email, password) {
 export const signUpMongo = async (name, email, phone, parentId, roles, password) => {
     //axios call
     try {
-        console.log("enter in Mongo registration function")
         const postData = {
             name,
             email,
@@ -58,7 +57,7 @@ export const login = async (email, password) => {
         // `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCdZivAO5V2Lp9mgkMn2S0wZ_C6PTEyFRM`,
         `http://localhost:4000/user/user-login`,
         postData ,
-        // {withCredentials:true}
+        {withCredentials:true}       
 );
     // axios.create({
     
@@ -95,8 +94,8 @@ export function saveTokenInCookie(tokenDetails) {
         // new Date().getTime() + tokenDetails.expiresIn * 1000,
         new Date().getTime() + 3600 * 1000,
     );
-    document.cookie = `${JSON.stringify(tokenDetails.accessToken)}`
-    return document.cookie
+    // document.cookie = `'userDetails', ${JSON.stringify(tokenDetails.accessToken)}`
+    // return document.cookie
     // localStorage.setItem('userDetails', JSON.stringify(tokenDetails));
 }
 

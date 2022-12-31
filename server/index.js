@@ -4,10 +4,13 @@ const app = express()
 const port = 4000
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
+const credentials = require('./middleware/credentials')
 
 
 app.use(express.json())
+app.use(credentials);
 app.use(cors(corsOptions))
+
 // app.use(function(req, res, next) {
 //   res.header('Access-Control-Allow-Origin', 'localhost');
 //   res.header('Access-Control-Allow-Credentials', true);

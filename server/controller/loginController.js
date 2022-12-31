@@ -55,6 +55,7 @@ const login = async (req, res) => {
       const result = await userLogin.save();
 
       // console.log(result);
+      res.setHeader("Authorization", `Bearer ${accessToken}`)
       res.cookie("userjwt", refreshToken, {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
