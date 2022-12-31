@@ -10,7 +10,7 @@ import {
 import logo from "../../images/logo-full.png";
 
 function Register(props) {
-  const rolesType = ["Admin","Director","CHead","TeamLeader","SalesPerson","MarketingPerson"]
+  const rolesType = ["Admin", "Director", "CHead", "TeamLeader", "SalesPerson", "MarketingPerson"]
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   let errorsObj = { email: '', password: '' };
@@ -129,29 +129,8 @@ function Register(props) {
                           <strong>Role</strong>
                         </label>
 
-                        {/* <Dropdown>
-                          <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                            Dropdown Button
-                          </Dropdown.Toggle>
 
-                          <Dropdown.Menu
-                            id="dropdown-menu-align-right"
-                            onSelect={handleSelect}>
-                            <Dropdown.Item key="Director">Action</Dropdown.Item>
-                            <Dropdown.Item key="Director">Another action</Dropdown.Item>
-                            <Dropdown.Item key="Director">Something else</Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown> */}
-                        {/* <select
-                          value={role}
-                          onSelect={(e) => setRole(e.target.value)}
-                          className="form-control" >
-                          <option value='Director'> Director</option>
-                          <option value='Ched'> Ched</option>
-                          <option value='TeamLeader'> TeamLeader</option>
-                          <option value='SalesPerson'> SalesPerson</option>
-                          <option value='Marketer'> Marketer</option>
-                        </select> */}
+
                         <select onChange={handleSelect} className="form-control">
                           <option>Roles</option>
                           {rolesType.map((option, index) => {
@@ -210,13 +189,13 @@ function Register(props) {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    errorMessage: state.auth.errorMessage,
-    successMessage: state.auth.successMessage,
-    showLoading: state.auth.showLoading,
-  };
-};
+// const mapStateToProps = (state) => {
+//   return {
+//     errorMessage: state.auth.errorMessage,
+//     successMessage: state.auth.successMessage,
+//     showLoading: state.auth.showLoading,
+//   };
+// };
 
-export default connect(mapStateToProps)(Register);
+export default Register;
 

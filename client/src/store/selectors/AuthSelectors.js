@@ -1,4 +1,9 @@
 export const isAuthenticated = (state) => {
-    if (state.auth.auth.idToken) return true;
+    console.log(state)
+    if (state.auth.auth.accessToken) return true;
     return false;
 };
+
+export const userDetails = (state)=>{
+    return state.auth.auth.userDetailForFront
+}

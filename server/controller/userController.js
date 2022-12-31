@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const Role_List = require("../config/Role_LIst");
 const createNewUser = async (req, res) => {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const {name, email,phone, parentId, roles, password } = req.body;
     const roleId = Role_List[roles];
     console.log(roleId, roles);
@@ -18,12 +18,17 @@ const createNewUser = async (req, res) => {
     
     // const totalUser = await User.find({ roles: "SalesPerson" });
     //authorization
-    // const jwt=req.cookies.userjwt;
-    // const foundUser = await User.findOne({refreshToken:jwt})
-    // const reqId= foundUser.roles
-    // if (reqId != 100 || roleId != 200 || roleId != 300){
-    //   return console.log("user Not allowed for this request")
-    // }
+    let jwt=req?.headers?.cookie ;
+    jwt = jwt.split("=")[1]
+    console.log(req?.Cookies)
+    console.log(req?.headers?.cookie , jwt)
+    const foundUser = await User.findOne({refreshToken:jwt||req?.Cookies})
+    console.log(foundUser)
+    const reqId= foundUser.roles
+    console.log(reqId)
+    if (reqId != 100){
+      return console.log("user Not allowed for this request")
+    }
     // console.log(totalUser.length);
     // const startNum = 9999 + totalUser.length + 1;
     // const nickName = name.slice(0, 4) + startNum;
@@ -32,28 +37,33 @@ const createNewUser = async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10);
     console.log(typeof(email),password,typeof(hashedPwd))
 
-    // if (roleId == 400 || roleId == 1000) {
-    //   const dispositionCount = {
-    //     10: 0,
-    //     11: 0,
-    //     12: 0,
-    //     13: 0,
-    //     14: 0,
-    //     15: 0,
-    //     16: 0,
-    //     17: 0,
-    //     18: 0,
-    //     19: 0,
-    //     20: 0,
-    //     21: 0,
-    //   };
-    //   const userCreated = await User.create({
-    //     email,
-    //     password: hashedPwd,
-    //   });
-    //   console.log(userCreated)
-    //   res.send(userCreated);
-    // } else {
+    if (roleId == 400 || roleId == 1000) {
+      const dispositionCount = {
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0,
+        16: 0,
+        17: 0,
+        18: 0,
+        19: 0,
+        20: 0,
+        21: 0,
+      };
+      const userCreated = await User.create({
+        name,
+        email,
+        phone,
+        parentId,
+        roles:roleId, 
+        dispositionCount,
+        password: hashedPwd,
+      });
+      console.log(userCreated)
+      res.send(userCreated);
+    } else {
       const userCreated = await User.create({
         name,
         email,
@@ -64,7 +74,7 @@ const createNewUser = async (req, res) => {
       });
       console.log(userCreated +"created")
       res.send(userCreated);
-
+    }
     
   } catch (error) {
     console.log(error.message)

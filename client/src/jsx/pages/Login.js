@@ -165,11 +165,11 @@ function Login (props) {
 	);
 };
 
-const mapStateToProps = (state) => {
-    return {
-        errorMessage: state.auth.errorMessage,
-        successMessage: state.auth.successMessage,
-        showLoading: state.auth.showLoading,
-    };
-};
-export default connect(mapStateToProps)(Login);
+// const mapStateToProps = (state) => {
+//     return {
+//         errorMessage: state.auth.errorMessage,
+//         successMessage: state.auth.successMessage,
+//         showLoading: state.auth.showLoading,
+//     };
+// };
+export default Login;

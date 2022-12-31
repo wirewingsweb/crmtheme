@@ -11,15 +11,18 @@ import PropetiesMap from '../Griya/Home/PropetiesMap';
 import ProgressBar from '../Griya/Home/ProgressBar';
 import CustomerReview from '../Griya/Home/CustomerReview';
 import RecentCustomer from '../Griya/Home/RecentCustomer';
-
+import { connect, useDispatch , useSelector} from 'react-redux';
+import { userDetails } from '../../../store/selectors/AuthSelectors';
 const Home = () => {
+	const user = useSelector(userDetails)
 	const { changeBackground } = useContext(ThemeContext);
 	useEffect(() => {
+		console.log(user.name)
 		changeBackground({ value: "light", label: "Light" });
 	}, []);
 	return(
 		<>
-			<PageHead activePage="Dashboard"  pageName="Dashboard" />
+			<PageHead activePage={`${user.name}`}  pageName="profile" />
 			<div className="row">
 				<div className="col-xl-3 col-sm-6">
 					<div className="card">

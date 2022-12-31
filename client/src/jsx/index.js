@@ -115,6 +115,7 @@ import Error500 from "./pages/Error500";
 import Error503 from "./pages/Error503";
 import Setting from "./layouts/Setting";
 import { ThemeContext } from "../context/ThemeContext";
+import CreateUser from "./components/Griya/Home/createUser";
 
 const Markup = () => {
   const { menuToggle } = useContext(ThemeContext);
@@ -129,6 +130,9 @@ const Markup = () => {
     { url: "analytics", component: <Analytics />},
     { url: "reviews", component: <Reviews />},
     { url: "task", component: <Task/>},
+
+  //crmTheme
+    {url:'customer', component: <CreateUser/>},
 	
 	///themes 
     { url: "theme1", component: <Demo1/> },

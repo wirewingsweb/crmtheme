@@ -13,49 +13,59 @@ export function signUp(email, password) {
         returnSecureToken: true,
     };
     console.log(postData)
-    // return axios.post(
-    //     // `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
-    //     // `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBGLtpF75eIonYoio6qZNOEcfccED4aB10`,
-    //     postData,
-    // );
-}
-export const signUpMongo = async (name,email,phone,parentId,roles,password)=> {
-    //axios call
-    try{
-    const postData = {
-        name,
-        email,
-        phone,
-        parentId,
-        roles,
-        password
-    };
-    console.log(postData)
-    const appliedMongo = await axios.post(
+    return axios.post(
         // `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
-        // `${}/user/user-signUp`,
-        `http://localhost:4000/user/user-signUp`,
-        postData
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCdZivAO5V2Lp9mgkMn2S0wZ_C6PTEyFRM`,
+        postData,
     );
-    return appliedMongo
+}
+export const signUpMongo = async (name, email, phone, parentId, roles, password) => {
+    //axios call
+    try {
+        console.log("enter in Mongo registration function")
+        const postData = {
+            name,
+            email,
+            phone,
+            parentId,
+            roles,
+            password
+        };
+        const appliedMongo = await axios.post(
+            // `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
+            // `${}/user/user-signUp`,
+            `http://localhost:4000/user/user-signUp`,
+            postData,
+            {withCredentials:true}
+        )
+        console.log(appliedMongo)
+        return appliedMongo
     }
-    catch(err){
+    catch (err) {
         console.log(err.message)
     }
 }
 
 
-export function login(email, password) {
+export const login = async (email, password) => {
     const postData = {
         email,
         password,
-        returnSecureToken: true,
     };
-    return axios.post(
+    // console.log(postData)
+    const loginData = await axios.post(
         // `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD3RPAp3nuETDn9OQimqn_YF6zdzqWITII`,
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBGLtpF75eIonYoio6qZNOEcfccED4aB10`,
-        postData,
-    );
+        // `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCdZivAO5V2Lp9mgkMn2S0wZ_C6PTEyFRM`,
+        `http://localhost:4000/user/user-login`,
+        postData ,
+        // {withCredentials:true}
+);
+    // axios.create({
+    
+    // withCredentials:true
+    // })
+    console.log(loginData.data.accessToken)
+    return loginData
 }
 
 export function formatError(errorResponse) {
@@ -66,11 +76,11 @@ export function formatError(errorResponse) {
             break;
         case 'EMAIL_NOT_FOUND':
             //return 'Email not found';
-           swal("Oops", "Email not found", "error",{ button: "Try Again!",});
-           break;
+            swal("Oops", "Email not found", "error", { button: "Try Again!", });
+            break;
         case 'INVALID_PASSWORD':
             //return 'Invalid Password';
-            swal("Oops", "Invalid Password", "error",{ button: "Try Again!",});
+            swal("Oops", "Invalid Password", "error", { button: "Try Again!", });
             break;
         case 'USER_DISABLED':
             return 'User Disabled';
@@ -79,11 +89,15 @@ export function formatError(errorResponse) {
     }
 }
 
-export function saveTokenInLocalStorage(tokenDetails) {
+export function saveTokenInCookie(tokenDetails) {
+    console.log(tokenDetails, "from localstorageSet")
     tokenDetails.expireDate = new Date(
-        new Date().getTime() + tokenDetails.expiresIn * 1000,
+        // new Date().getTime() + tokenDetails.expiresIn * 1000,
+        new Date().getTime() + 3600 * 1000,
     );
-    localStorage.setItem('userDetails', JSON.stringify(tokenDetails));
+    document.cookie = `${JSON.stringify(tokenDetails.accessToken)}`
+    return document.cookie
+    // localStorage.setItem('userDetails', JSON.stringify(tokenDetails));
 }
 
 export function runLogoutTimer(dispatch, timer, navigate) {

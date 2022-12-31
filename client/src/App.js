@@ -29,6 +29,7 @@ function App() {
     useEffect(() => {
         checkAutoLogin(dispatch, navigate);
     }, []);
+    console.log(auth, 'from app.js')
 
 
     let routeblog = (

@@ -2,10 +2,12 @@ import {
     formatError,
     login,
     runLogoutTimer,
-    saveTokenInLocalStorage,
+    saveTokenInCookie,
+    // saveTokenInLocalStorage,
     signUp,
     signUpMongo
 } from '../../services/AuthService';
+import axios from 'axios';
 
 
 export const SIGNUP_CONFIRMED_ACTION = '[signup action] confirmed signup';
@@ -15,25 +17,47 @@ export const LOGIN_FAILED_ACTION = '[login action] failed login';
 export const LOADING_TOGGLE_ACTION = '[Loading action] toggle loading';
 export const LOGOUT_ACTION = '[Logout action] logout action';
 
-export function signupAction(name,email,phone,parentId,roles,password, navigate) {
+export function signupAction(name, email, phone, parentId, roles, password, navigate) {
     return (dispatch) => {
-        signUp(email, password)
-        signUpMongo(name,email,phone,parentId,roles,password)
-        .then((response) => {
-            saveTokenInLocalStorage(response.data);
-            runLogoutTimer(
-                dispatch,
-                response.data.expiresIn * 1000,
-                navigate,
-            );
-            dispatch(confirmedSignupAction(response.data));
-            //history.push('/dashboard');
-            navigate('/dashboard');
-        })
-        .catch((error) => {
-            const errorMessage = formatError(error.response.data);
-            dispatch(signupFailedAction(errorMessage));
-        });
+        signUpMongo(name, email, phone, parentId, roles, password)
+            .then((response) => {
+                if(response.data.message=="Request is Unathorized"){
+                    alert('unAthorized')
+                    return console.log(response.data.message, 'form mongoresponse')
+                }else{
+                    
+                    signUp(email, password)
+                        .then((responses) => {
+                            saveTokenInCookie(responses.data);
+                            runLogoutTimer(
+                                dispatch,
+                                3600 * 1000,
+                                navigate,
+                            );
+                            dispatch(confirmedSignupAction(response.data));
+                            //history.push('/dashboard');
+                            // navigate('/dashboard');
+                        })
+                        console.log(response.data, "from signUp Mongo response")
+                    alert(response.data.accessToken)
+                }                
+            })
+            // signUp(email, password)
+            //     .then((response) => {
+            //         saveTokenInCookie(response.data);
+            //         runLogoutTimer(
+            //             dispatch,
+            //             3600 * 1000,
+            //             navigate,
+            //         );
+            //         dispatch(confirmedSignupAction(response.data));
+            //         //history.push('/dashboard');
+            //         // navigate('/dashboard');
+            //     })
+            .catch((error) => {
+                const errorMessage = formatError(error.response);
+                dispatch(signupFailedAction(errorMessage));
+            });
     };
 }
 
@@ -50,18 +74,21 @@ export function loginAction(email, password, navigate) {
     return (dispatch) => {
         login(email, password)
             .then((response) => {
-                saveTokenInLocalStorage(response.data);
-                runLogoutTimer(
-                    dispatch,
-                    response.data.expiresIn * 1000,
-                    navigate,
-                );
+                console.log(response.data, 'response data from login')
+                // setHeader("Authorization", `Bearer ${response.data.accessToken}`)
+                const accessTokenSaved = saveTokenInCookie(response.data);
+                if (response) {
+                    navigate('/dashboard');
+                }
+                // runLogoutTimer(
+                //     dispatch,
+                //     3600 * 1000,
+                //     navigate,
+                // );
                 dispatch(loginConfirmedAction(response.data));
-				//history.push('/dashboard');                
-				navigate('/dashboard');                
             })
             .catch((error) => {
-				//console.log(error);
+                console.log("error");
                 const errorMessage = formatError(error.response.data);
                 dispatch(loginFailedAction(errorMessage));
             });
